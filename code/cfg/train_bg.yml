@@ -1,0 +1,47 @@
+CONFIG_NAME: '3stages'
+DATASET_NAME: 'birds'
+# DATA_DIR: '/Users/lidan/Downloads/birds' #'../data/birds'
+DATA_DIR: '/content/data/birds' #'../data/birds'
+SAVE_DIR: '/content/output/vis'
+# SAVE_DIR: '../output/vis'
+GPU_ID: '-1'
+WORKERS: 4
+
+SUPER_CATEGORIES: 20   # For CUB 
+FINE_GRAINED_CATEGORIES: 200  # For CUB
+TIED_CODES: True   # Do NOT change this to False during training.
+
+TREE:
+    BRANCH_NUM: 3
+
+TRAIN:
+    FLAG: True
+    # NET_G: ''  # Specify the generator path to resume training
+    # NET_D: ''  # Specify the discriminator path to resume training
+    GB1: ''  # Specify the generator path to resume training
+    DB: ''  # Specify the discriminator path to resume training
+    GF1: ''  # Specify the generator path to resume training
+    DF: ''  # Specify the discriminator path to resume training
+    G_OUT: ''  # Specify the generator path to resume training
+
+    BATCH_SIZE: 2
+    MAX_EPOCH: 600
+    HARDNEG_MAX_ITER: 1500
+    SNAPSHOT_INTERVAL: 1000
+    SNAPSHOT_INTERVAL_HARDNEG: 500
+    DISCRIMINATOR_LR: 0.0002
+    GENERATOR_LR: 0.0002
+
+GAN:
+    DF_DIM: 64
+    GF_DIM: 64
+    Z_DIM: 256
+    R_NUM: 2
+
+SPADE:
+    NDF: 64
+    NGF: 64
+    Z_DIM: 256
+    L_NC: 1
+    O_NC: 3
+    R_NUM: 2

@@ -46,6 +46,11 @@ __C.TRAIN.GENERATOR_LR = 2e-4
 __C.TRAIN.FLAG = True
 __C.TRAIN.NET_G = ''
 __C.TRAIN.NET_D = ''
+__C.TRAIN.GB1 = ''  
+__C.TRAIN.DB = ''  
+__C.TRAIN.GF1 = ''  
+__C.TRAIN.DF = ''  
+__C.TRAIN.G_OUT = ''  
 
 
 # Modal options
@@ -57,45 +62,56 @@ __C.GAN.NETWORK_TYPE = 'default'
 __C.GAN.R_NUM = 2
 
 
+# Modal options
+__C.SPADE = edict()
+__C.SPADE.NDF = 64
+__C.SPADE.NGF = 64
+__C.SPADE.Z_DIM = 100
+__C.SPADE.L_NC = 1
+__C.SPADE.O_NC = 3
+__C.SPADE.NETWORK_TYPE = 'default'
+__C.SPADE.R_NUM = 2
 
 
 def _merge_a_into_b(a, b):
-    """Merge config dictionary a into config dictionary b, clobbering the
-    options in b whenever they are also specified in a.
-    """
-    if type(a) is not edict:
-        return
+	"""Merge config dictionary a into config dictionary b, clobbering the
+	options in b whenever they are also specified in a.
+	"""
+	if type(a) is not edict:
+		return
 
-    for k, v in a.iteritems():
-        # a must specify keys that are in b
-        if not b.has_key(k):
-            raise KeyError('{} is not a valid config key'.format(k))
+	for k, v in a.items():
+		# a must specify keys that are in b
+		# if not b.has_key(k):
+		if not k in b:
 
-        # the types must match, too
-        old_type = type(b[k])
-        if old_type is not type(v):
-            if isinstance(b[k], np.ndarray):
-                v = np.array(v, dtype=b[k].dtype)
-            else:
-                raise ValueError(('Type mismatch ({} vs. {}) '
-                                  'for config key: {}').format(type(b[k]),
-                                                               type(v), k))
+			raise KeyError('{} is not a valid config key'.format(k))
 
-        # recursively merge dicts
-        if type(v) is edict:
-            try:
-                _merge_a_into_b(a[k], b[k])
-            except:
-                print('Error under config key: {}'.format(k))
-                raise
-        else:
-            b[k] = v
+		# the types must match, too
+		old_type = type(b[k])
+		if old_type is not type(v):
+			if isinstance(b[k], np.ndarray):
+				v = np.array(v, dtype=b[k].dtype)
+			else:
+				raise ValueError(('Type mismatch ({} vs. {}) '
+								  'for config key: {}').format(type(b[k]),
+															   type(v), k))
+
+		# recursively merge dicts
+		if type(v) is edict:
+			try:
+				_merge_a_into_b(a[k], b[k])
+			except:
+				print('Error under config key: {}'.format(k))
+				raise
+		else:
+			b[k] = v
 
 
 def cfg_from_file(filename):
-    """Load a config file and merge it into the default options."""
-    import yaml
-    with open(filename, 'r') as f:
-        yaml_cfg = edict(yaml.load(f))
+	"""Load a config file and merge it into the default options."""
+	import yaml
+	with open(filename, 'r') as f:
+		yaml_cfg = edict(yaml.load(f))
 
-    _merge_a_into_b(yaml_cfg, __C)
+	_merge_a_into_b(yaml_cfg, __C)
